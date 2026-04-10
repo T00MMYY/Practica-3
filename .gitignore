@@ -1,0 +1,16 @@
+# Dependencias (carpetas muy pesadas)
+node_modules/
+.angular/
+
+# Archivos de configuración sensible (Seguridad)
+.env
+
+# Archivos de compilación y temporales
+dist/
+tmp/
+out/
+.DS_Store
+
+# Archivos de Claude/Gemini (Opcional, según prefieras)
+.claude/
+.gemini/
