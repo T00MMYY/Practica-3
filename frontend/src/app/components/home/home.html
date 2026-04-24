@@ -1,5 +1,4 @@
 <main class="min-h-screen bg-gray-50">
-  
   <section class="bg-black text-white py-16 px-6 text-center">
     <div class="max-w-4xl mx-auto">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">
@@ -21,15 +20,18 @@
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      
-      <div class="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-lg transition">
-        <div class="bg-zinc-100 aspect-square rounded flex items-center justify-center mb-4">
-          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" alt="Zapatilla" class="max-h-40 object-contain">
-        </div>
-        <p class="text-xs text-zinc-400 font-bold uppercase mb-1">Running</p>
-        <h3 class="text-lg font-bold text-black">AirStride Pro</h3>
-        <p class="text-xl font-semibold text-zinc-900 mt-2">129.99 €</p>
-      </div>
+      <div *ngFor="let producto of productosDestacados" 
+     class="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-lg transition">
+  
+  <div class="bg-zinc-100 aspect-square rounded flex items-center justify-center mb-4">
+    <img [src]="producto.imagen" [alt]="producto.nombre" class="max-h-40 object-contain">
+  </div>
+  
+  <p class="text-xs text-zinc-400 font-bold uppercase mb-1">{{ producto.categoria }}</p>
+  <h3 class="text-lg font-bold text-black">{{ producto.nombre }}</h3>
+  <p class="text-xl font-semibold text-zinc-900 mt-2">{{ producto.precio }} €</p>
+
+</div>
 
     </div>
   </section>
