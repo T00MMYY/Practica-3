@@ -1,3 +1,38 @@
-<main>
-    <h1>Home</h1>
+<main class="min-h-screen bg-gray-50">
+  
+  <section class="bg-black text-white py-16 px-6 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Las mejores zapatillas, a tu medida
+      </h1>
+      <p class="text-zinc-400 text-lg mb-8">
+        Running, basketball, lifestyle y training. Encuentra tu par perfecto.
+      </p>
+      <button routerLink="/catalogo" class="bg-white text-black px-8 py-3 font-bold rounded hover:bg-zinc-200 transition">
+        Ver catálogo
+      </button>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto py-12 px-6">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-bold text-black uppercase tracking-tight">Productos destacados</h2>
+      <a routerLink="/catalogo" class="text-zinc-500 hover:text-black font-medium transition">Ver todos →</a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <div class="bg-white border border-zinc-200 rounded-lg p-4 hover:shadow-lg transition">
+        <div class="bg-zinc-100 aspect-square rounded flex items-center justify-center mb-4">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff" alt="Zapatilla" class="max-h-40 object-contain">
+        </div>
+        <p class="text-xs text-zinc-400 font-bold uppercase mb-1">Running</p>
+        <h3 class="text-lg font-bold text-black">AirStride Pro</h3>
+        <p class="text-xl font-semibold text-zinc-900 mt-2">129.99 €</p>
+      </div>
+
+    </div>
+  </section>
+
+
 </main>

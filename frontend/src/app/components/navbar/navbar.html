@@ -1,15 +1,19 @@
-<nav class="bg-slate-600 text-white p-6 flex items-center justify-between">
+<nav class="bg-black text-white p-6 flex items-center justify-between sticky top-0 z-50">
     <div class="flex-1">
-        <a href="/">KickStore</a>
+        <a routerLink="/" class="text-xl font-bold tracking-tighter uppercase italic">
+            KickStore
+        </a>
     </div>
 
-    <div class="flex gap-6 justify-center">
-        <a routerLink="/">Inicio</a>
-        <a routerLink="/catalogo">Catálogo</a>
-        <a routerLink="/contacto">Contacto</a>
+    <div class="flex gap-8 justify-center items-center text-sm font-medium">
+        <a routerLink="/" routerLinkActive="text-zinc-400" [routerLinkActiveOptions]="{exact: true}">Inicio</a>
+        <a routerLink="/catalogo" routerLinkActive="text-zinc-400">Catálogo</a>
+        <a routerLink="/contacto" routerLinkActive="text-zinc-400">Contacto</a>
     </div>
 
-    <div class="flex-1 text-right">
-        <a href="">Iniciar Sesión</a>
+    <div class="flex-1 flex justify-end items-center gap-6">
+        <a routerLink="/login" class="px-4 py-2 hover:text-zinc-200 transition text-sm">
+            Iniciar Sesión
+        </a>
     </div>
 </nav>
