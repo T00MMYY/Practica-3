@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+﻿import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { map, Observable } from 'rxjs';
+
+import { ProductService, Product } from '../../services/product.service';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +13,8 @@ import { RouterLink } from '@angular/router';
   styleUrl: './home.css',
 })
 export class Home {
-  productosDestacados = [
-    { nombre: 'AirStride Pro', categoria: 'Running', precio: 129.99, imagen: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff' },
-    { nombre: 'AirStride Pro', categoria: 'Running', precio: 129.99, imagen: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff' },
-    { nombre: 'AirStride Pro', categoria: 'Running', precio: 129.99, imagen: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff' },
-    { nombre: 'AirStride Pro', categoria: 'Running', precio: 129.99, imagen: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff' }
-  ];
+  private productService = inject(ProductService);
+  featuredProducts: Observable<Product[]> = this.productService
+    .getProducts({ limit: 4 })
+    .pipe(map((response) => response.data));
 }

@@ -1,1 +1,53 @@
-<p>register works!</p>
+<main class="min-h-screen bg-stone-50 flex items-center justify-center px-4 py-12">
+    <div class="max-w-md w-full bg-white border border-stone-200 shadow-[20px_20px_0px_0px_rgba(0,0,0,0.03)] p-10 md:p-12">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black tracking-tighter uppercase italic mb-2 text-black">
+                KickStore
+            </h1>
+            <h2 class="text-xs font-black uppercase tracking-[0.3em] text-zinc-400">Unete a la comunidad</h2>
+            <p class="text-zinc-500 text-sm mt-4 font-medium">Crea tu cuenta</p> 
+        </div>
+
+        <form class="flex flex-col gap-6">
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Nombre Completo</label>
+                <input 
+                    type="text" 
+                    placeholder="Tu nombre" 
+                    class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
+                    required> 
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Email</label>
+                <input 
+                    type="email" 
+                    placeholder="ejemplo@correo.com" 
+                    class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
+                    required> 
+            </div>
+
+            <div class="flex flex-col gap-2">
+                <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Contraseña</label>
+                <input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
+                    required>
+            </div>
+
+            <button 
+                type="submit" 
+                class="mt-4 bg-black text-white p-5 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all active:scale-95 shadow-xl shadow-zinc-200">
+                Crear Cuenta
+            </button> 
+
+            <div class="text-center mt-6 pt-6 border-t border-stone-100">
+                <p class="text-zinc-500 text-xs font-medium">
+                    ¿YA ERES MIEMBRO? 
+                    <a routerLink="/login" class="text-red-600 font-black hover:underline ml-1">INICIAR SESIÓN</a> 
+                </p>
+            </div>
+        </form>
+    </div>
+</main>
