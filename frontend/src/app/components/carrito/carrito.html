@@ -1,0 +1,101 @@
+<main class="min-h-screen bg-stone-50 px-6 py-12">
+  <div class="max-w-5xl mx-auto">
+
+    <h1 class="text-4xl font-black tracking-tighter uppercase mb-8">Tu carrito</h1>
+
+    <!-- Pedido realizado -->
+    <div *ngIf="ordered()" class="text-center py-24">
+      <div class="text-5xl mb-4">✓</div>
+      <h2 class="text-2xl font-black uppercase tracking-widest mb-2">¡Pedido realizado!</h2>
+      <p class="text-zinc-500 mb-8">Tu pedido se ha enviado correctamente.</p>
+      <a routerLink="/mis-pedidos"
+        class="bg-black text-white px-8 py-4 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all">
+        Ver mis pedidos
+      </a>
+    </div>
+
+    <!-- Carrito vacío -->
+    <div *ngIf="!ordered() && items().length === 0" class="text-center py-24">
+      <div class="text-5xl mb-4">🛒</div>
+      <h2 class="text-xl font-black uppercase tracking-widest mb-2">Tu carrito está vacío</h2>
+      <p class="text-zinc-500 mb-8">Añade productos desde el catálogo para empezar.</p>
+      <a routerLink="/catalogo"
+        class="bg-black text-white px-8 py-4 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all">
+        Ver catálogo
+      </a>
+    </div>
+
+    <!-- Productos en el carrito -->
+    <div *ngIf="!ordered() && items().length > 0" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- Lista de productos -->
+      <div class="lg:col-span-2 flex flex-col gap-4">
+        <div *ngFor="let item of items()"
+          class="bg-white border border-zinc-200 rounded-2xl p-5 flex gap-4 items-center">
+          <img *ngIf="item.image_url" [src]="item.image_url" [alt]="item.name"
+            class="w-20 h-20 object-contain bg-stone-100 rounded-xl">
+          <div *ngIf="!item.image_url"
+            class="w-20 h-20 bg-stone-100 rounded-xl flex items-center justify-center text-3xl">👟</div>
+
+          <div class="flex-1">
+            <div class="font-black text-sm">{{ item.name }}</div>
+            <div class="text-xs text-zinc-400 mt-1">Talla: {{ item.size }}</div>
+            <div class="text-sm font-semibold mt-1">{{ item.price | number:'1.2-2' }} €</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button (click)="updateQuantity(item, item.quantity - 1)"
+              class="w-8 h-8 border border-zinc-200 font-bold hover:bg-stone-100 transition">−</button>
+            <span class="w-8 text-center font-black text-sm">{{ item.quantity }}</span>
+            <button (click)="updateQuantity(item, item.quantity + 1)"
+              class="w-8 h-8 border border-zinc-200 font-bold hover:bg-stone-100 transition">+</button>
+          </div>
+
+          <div class="text-right">
+            <div class="font-black text-sm">{{ (item.price * item.quantity) | number:'1.2-2' }} €</div>
+            <button (click)="removeItem(item)"
+              class="text-xs text-red-500 hover:text-red-700 mt-1 transition">Eliminar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen -->
+      <div class="bg-white border border-zinc-200 rounded-2xl p-6 h-fit flex flex-col gap-4">
+        <h2 class="font-black uppercase tracking-widest text-sm">Resumen del pedido</h2>
+
+        <div class="flex justify-between text-sm">
+          <span class="text-zinc-500">Productos ({{ totalItems }})</span>
+          <span class="font-semibold">{{ total | number:'1.2-2' }} €</span>
+        </div>
+        <div class="flex justify-between text-sm">
+          <span class="text-zinc-500">Envío</span>
+          <span class="font-bold text-green-600">Gratis</span>
+        </div>
+        <div class="flex justify-between font-black border-t border-zinc-100 pt-3">
+          <span>Total</span>
+          <span>{{ total | number:'1.2-2' }} €</span>
+        </div>
+
+        <!-- Dirección y notas -->
+        <div class="flex flex-col gap-3 border-t border-zinc-100 pt-3">
+          <div>
+            <label class="text-[10px] font-black uppercase tracking-widest">Dirección de envío</label>
+            <input type="text" [(ngModel)]="shippingAddress"
+              placeholder="Calle, número, ciudad..."
+              class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm">
+          </div>
+          <div>
+            <label class="text-[10px] font-black uppercase tracking-widest">Observaciones</label>
+            <textarea [(ngModel)]="notes" rows="2" placeholder="Instrucciones de entrega..."
+              class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm resize-none"></textarea>
+          </div>
+        </div>
+
+        <button (click)="checkout()" [disabled]="loading()"
+          class="w-full py-4 bg-black text-white font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all disabled:opacity-40">
+          {{ loading() ? 'Procesando...' : 'Finalizar pedido' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</main>

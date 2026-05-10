@@ -1,0 +1,152 @@
+<main class="min-h-screen bg-stone-50 px-6 py-12">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-4xl font-black tracking-tighter uppercase">Gestión de productos</h1>
+        <p class="text-zinc-500 mt-1">{{ products().length }} productos en el catálogo</p>
+      </div>
+      <button (click)="openNew()"
+        class="bg-black text-white px-6 py-3 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all">
+        + Nuevo producto
+      </button>
+    </div>
+
+    <div *ngIf="loading()" class="text-center py-16 text-zinc-400">Cargando productos...</div>
+
+    <div *ngIf="!loading()" class="bg-white border border-zinc-200 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-stone-100 border-b border-zinc-200">
+          <tr>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Producto</th>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Categoría</th>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Precio</th>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Stock</th>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Estado</th>
+            <th class="text-left px-4 py-3 font-black uppercase tracking-widest text-xs">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products()" class="border-b border-zinc-100 hover:bg-stone-50 transition">
+            <td class="px-4 py-3">
+              <div class="flex items-center gap-3">
+                <img *ngIf="p.image_url" [src]="p.image_url" [alt]="p.name"
+                  class="w-10 h-10 object-contain bg-stone-100 rounded">
+                <div *ngIf="!p.image_url"
+                  class="w-10 h-10 bg-stone-100 rounded flex items-center justify-center text-zinc-300 text-xs">IMG</div>
+                <div>
+                  <div class="font-bold text-zinc-900">{{ p.name }}</div>
+                  <div class="text-xs text-zinc-400">{{ p.brand }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-zinc-600">{{ p.categories?.name || '-' }}</td>
+            <td class="px-4 py-3 font-semibold">{{ p.price | number:'1.2-2' }} €</td>
+            <td class="px-4 py-3">{{ p.stock }}</td>
+            <td class="px-4 py-3">
+              <span [class]="p.is_active
+                ? 'bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold'
+                : 'bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold'">
+                {{ p.is_active ? 'Activo' : 'Inactivo' }}
+              </span>
+            </td>
+            <td class="px-4 py-3 flex gap-3">
+              <button (click)="openEdit(p)"
+                class="text-xs font-bold uppercase tracking-widest hover:text-red-600 transition">Editar</button>
+              <button (click)="confirmDelete(p.id)"
+                class="text-xs font-bold uppercase tracking-widest text-red-500 hover:text-red-700 transition">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- Modal -->
+<div *ngIf="showModal()" class="fixed inset-0 bg-black/50 z-50 flex items-start justify-end">
+  <div class="bg-white w-full max-w-md h-full overflow-y-auto p-8 shadow-2xl">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-lg font-black uppercase tracking-widest">
+        {{ editingProduct() ? 'Editar producto' : 'Nuevo producto' }}
+      </h2>
+      <button (click)="closeModal()" class="text-zinc-400 hover:text-black text-xl font-bold">✕</button>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Nombre *</label>
+        <input type="text" [(ngModel)]="form.name" (blur)="generateSlug()"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm" placeholder="Nike Air Max 90">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Slug</label>
+        <input type="text" [(ngModel)]="form.slug"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm" placeholder="nike-air-max-90">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Marca</label>
+        <input type="text" [(ngModel)]="form.brand"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm" placeholder="Nike">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Categoría</label>
+        <select [(ngModel)]="form.category_id"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm">
+          <option value="">Selecciona una categoría</option>
+          <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[10px] font-black uppercase tracking-widest text-black">Precio (€) *</label>
+          <input type="number" [(ngModel)]="form.price" min="0" step="0.01"
+            class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm">
+        </div>
+        <div>
+          <label class="text-[10px] font-black uppercase tracking-widest text-black">Stock</label>
+          <input type="number" [(ngModel)]="form.stock" min="0"
+            class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Tallas (separadas por comas)</label>
+        <input type="text" [(ngModel)]="form.sizes"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm" placeholder="38, 39, 40, 41, 42">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">URL Imagen</label>
+        <input type="text" [(ngModel)]="form.image_url"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm" placeholder="https://...">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black uppercase tracking-widest text-black">Descripción</label>
+        <textarea [(ngModel)]="form.description" rows="3"
+          class="w-full mt-1 p-3 bg-stone-50 border border-stone-200 text-sm resize-none"></textarea>
+      </div>
+
+      <div class="flex items-center gap-2 mt-2">
+        <input type="checkbox" [(ngModel)]="form.is_active" id="isActive" class="w-4 h-4">
+        <label for="isActive" class="text-sm font-medium">Producto activo</label>
+      </div>
+
+      <div class="flex gap-3 mt-4">
+        <button (click)="closeModal()"
+          class="flex-1 py-3 border border-zinc-200 text-sm font-bold uppercase tracking-widest hover:bg-stone-50 transition">
+          Cancelar
+        </button>
+        <button (click)="save()"
+          class="flex-1 py-3 bg-black text-white text-sm font-bold uppercase tracking-widest hover:bg-red-600 transition">
+          {{ editingProduct() ? 'Guardar cambios' : 'Crear producto' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

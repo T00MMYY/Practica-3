@@ -1,30 +1,63 @@
-<nav class="bg-black/95 backdrop-blur-md text-white px-6 py-4 flex items-center justify-between sticky top-0 z-50 border-b border-white/5">
+<nav
+    class="bg-black/95 backdrop-blur-md text-white px-6 py-4 flex items-center justify-between sticky top-0 z-50 border-b border-white/5">
     <div class="flex-1">
-        <a routerLink="/" class="text-2xl font-black tracking-tighter uppercase italic hover:text-red-500 transition-colors">
+        <a routerLink="/"
+            class="text-2xl font-black tracking-tighter uppercase italic hover:text-red-500 transition-colors">
             KickStore
         </a>
     </div>
 
     <div class="hidden md:flex gap-10 justify-center items-center text-[11px] uppercase tracking-[0.2em] font-bold">
-        <a routerLink="/" 
-           routerLinkActive="text-red-500" 
-           [routerLinkActiveOptions]="{exact: true}"
-           class="hover:text-red-400 transition-colors">Inicio</a>
-        <a routerLink="/catalogo" 
-           routerLinkActive="text-red-500"
-           class="hover:text-red-400 transition-colors">Catálogo</a>
-        <a routerLink="/contacto" 
-           routerLinkActive="text-red-500"
-           class="hover:text-red-400 transition-colors">Contacto</a>
+        <a routerLink="/" routerLinkActive="text-red-500" [routerLinkActiveOptions]="{exact: true}"
+            class="hover:text-red-400 transition-colors">Inicio</a>
+        <a routerLink="/catalogo" routerLinkActive="text-red-500"
+            class="hover:text-red-400 transition-colors">Catálogo</a>
+
+        <ng-container *ngIf="authService.isLoggedIn() && !authService.isAdmin()">
+            <a routerLink="/mis-pedidos" routerLinkActive="text-red-500"
+                class="hover:text-red-400 transition-colors">Mis Pedidos</a>
+        </ng-container>
+
+        <ng-container *ngIf="authService.isAdmin()">
+            <a routerLink="/admin/productos" routerLinkActive="text-red-500"
+                class="hover:text-red-400 transition-colors">Admin Productos</a>
+            <a routerLink="/admin/pedidos" routerLinkActive="text-red-500"
+                class="hover:text-red-400 transition-colors">Admin Pedidos</a>
+        </ng-container>
     </div>
 
     <div class="flex-1 flex justify-end items-center gap-6">
-        <a routerLink="/login" class="text-[11px] font-bold uppercase tracking-widest hover:text-red-500 transition-colors">
-            Login
-        </a>
-        <button class="relative group">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-red-500 transition-colors"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
-            <span class="absolute -top-2 -right-2 bg-red-600 text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center text-white">0</span>
-        </button>
+        <ng-container *ngIf="authService.isLoggedIn(); else anonymousLinks">
+            <span class="text-[11px] font-bold uppercase tracking-widest text-white">
+                {{ authService.user()?.full_name || authService.user()?.email || 'Usuario' }}
+            </span>
+            <button type="button" (click)="logout()"
+                class="text-[11px] font-bold uppercase tracking-widest hover:text-red-500 transition-colors">
+                Cerrar sesión
+            </button>
+        </ng-container>
+
+        <ng-template #anonymousLinks>
+            <a routerLink="/login"
+                class="text-[11px] font-bold uppercase tracking-widest hover:text-red-500 transition-colors">
+                Iniciar sesión
+            </a>
+        </ng-template>
+
+        <ng-container *ngIf="!authService.isAdmin()">
+            <a routerLink="/carrito" class="relative group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="group-hover:text-red-500 transition-colors">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+                <span
+                    class="absolute -top-2 -right-2 bg-red-600 text-[9px] font-black rounded-full w-4 h-4 flex items-center justify-center text-white">
+                    {{ cartCount() }}
+                </span>
+            </a>
+        </ng-container>
     </div>
 </nav>

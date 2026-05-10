@@ -9,11 +9,13 @@
             <p class="text-zinc-500 text-sm mt-4 font-medium">Crea tu cuenta</p> 
         </div>
 
-        <form class="flex flex-col gap-6">
+        <form class="flex flex-col gap-6" (ngSubmit)="registerUser()">
             <div class="flex flex-col gap-2">
                 <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Nombre Completo</label>
                 <input 
                     type="text" 
+                    name="fullName"
+                    [(ngModel)]="fullName"
                     placeholder="Tu nombre" 
                     class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
                     required> 
@@ -22,6 +24,8 @@
                 <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Email</label>
                 <input 
                     type="email" 
+                    name="email"
+                    [(ngModel)]="email"
                     placeholder="ejemplo@correo.com" 
                     class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
                     required> 
@@ -31,15 +35,20 @@
                 <label class="text-[10px] font-black uppercase tracking-widest text-black ml-1">Contraseña</label>
                 <input 
                     type="password" 
+                    name="password"
+                    [(ngModel)]="password"
                     placeholder="••••••••" 
                     class="p-4 bg-stone-50 border border-stone-200 font-medium text-sm"
                     required>
             </div>
 
+            <div *ngIf="error" class="text-red-600 text-sm font-bold">{{ error }}</div>
+
             <button 
                 type="submit" 
-                class="mt-4 bg-black text-white p-5 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all active:scale-95 shadow-xl shadow-zinc-200">
-                Crear Cuenta
+                [disabled]="loading"
+                class="mt-4 bg-black text-white p-5 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all active:scale-95 shadow-xl shadow-zinc-200 disabled:opacity-40">
+                {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
             </button> 
 
             <div class="text-center mt-6 pt-6 border-t border-stone-100">

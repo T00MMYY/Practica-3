@@ -1,0 +1,87 @@
+<main class="min-h-screen bg-stone-50 px-6 py-12">
+  <div class="max-w-6xl mx-auto">
+
+    <div *ngIf="loading()" class="text-center py-16 text-zinc-400">Cargando producto...</div>
+
+    <div *ngIf="!loading() && !product()" class="text-center py-16 text-zinc-400">
+      Producto no encontrado.
+    </div>
+
+    <div *ngIf="!loading() && product()" class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+      <!-- Imagen -->
+      <div class="bg-white border border-zinc-200 rounded-3xl aspect-square flex items-center justify-center overflow-hidden">
+        <img *ngIf="product()!.image_url"
+          [src]="product()!.image_url" [alt]="product()!.name"
+          class="object-contain max-h-full p-8">
+        <div *ngIf="!product()!.image_url"
+          class="text-zinc-200 text-6xl">👟</div>
+      </div>
+
+      <!-- Info -->
+      <div class="flex flex-col justify-center gap-6">
+
+        <div>
+          <a routerLink="/catalogo" class="text-xs text-zinc-400 hover:text-black transition">← Volver al catálogo</a>
+          <p class="text-xs uppercase tracking-[0.3em] text-zinc-400 mt-3">{{ product()!.brand }}</p>
+          <h1 class="text-4xl font-black tracking-tighter mt-1">{{ product()!.name }}</h1>
+          <p class="text-zinc-400 text-sm mt-1">{{ product()!.categories?.name }}</p>
+        </div>
+
+        <div class="text-3xl font-black">{{ product()!.price | number:'1.2-2' }} €</div>
+
+        <p class="text-zinc-600 text-sm leading-relaxed">
+          {{ product()!.description || 'Sin descripción disponible.' }}
+        </p>
+
+        <!-- Tallas -->
+        <div *ngIf="product()!.sizes?.length">
+          <p class="text-[10px] font-black uppercase tracking-widest mb-3">
+            Talla — {{ selectedSize() || 'Selecciona una talla' }}
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button *ngFor="let size of product()!.sizes"
+              (click)="selectSize(size)"
+              [class]="selectedSize() === size
+                ? 'w-12 h-12 border-2 border-black bg-black text-white text-sm font-bold'
+                : 'w-12 h-12 border border-zinc-200 bg-white text-sm font-bold hover:border-black transition'">
+              {{ size }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div>
+          <p class="text-[10px] font-black uppercase tracking-widest mb-3">Cantidad</p>
+          <div class="flex items-center gap-4">
+            <button (click)="decrement()"
+              class="w-10 h-10 border border-zinc-200 font-bold text-lg hover:bg-stone-100 transition">−</button>
+            <span class="font-black text-lg w-8 text-center">{{ quantity() }}</span>
+            <button (click)="increment()"
+              class="w-10 h-10 border border-zinc-200 font-bold text-lg hover:bg-stone-100 transition">+</button>
+            <span class="text-xs text-zinc-400">{{ product()!.stock }} disponibles</span>
+          </div>
+        </div>
+
+        <!-- Botón añadir -->
+        <ng-container *ngIf="authService.isLoggedIn() && !authService.isAdmin()">
+          <button (click)="addToCart()"
+            [disabled]="!selectedSize()"
+            [class]="addedToCart()
+              ? 'w-full py-5 bg-green-600 text-white font-black uppercase tracking-widest text-sm transition-all'
+              : 'w-full py-5 bg-black text-white font-black uppercase tracking-widest text-sm hover:bg-red-600 transition-all disabled:opacity-40'">
+            {{ addedToCart() ? '✓ Añadido al carrito' : 'Añadir al carrito' }}
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="!authService.isLoggedIn()">
+          <a routerLink="/login"
+            class="w-full py-5 bg-black text-white font-black uppercase tracking-widest text-sm text-center hover:bg-red-600 transition-all">
+            Inicia sesión para comprar
+          </a>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+</main>
