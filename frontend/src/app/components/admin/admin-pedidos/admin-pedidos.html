@@ -16,7 +16,6 @@
       <div *ngFor="let order of orders()"
         class="bg-white border border-zinc-200 overflow-hidden">
 
-        <!-- Cabecera del pedido -->
         <div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-stone-50 transition"
           (click)="toggleExpand(order.id)">
           <div>
@@ -28,7 +27,6 @@
           </div>
 
           <div class="flex items-center gap-4">
-            <!-- Selector de estado -->
             <select [ngModel]="order.status" (ngModelChange)="changeStatus(order, $event)"
               (click)="$event.stopPropagation()"
               class="text-xs font-bold border border-zinc-200 px-3 py-2 bg-white focus:outline-none">
@@ -41,7 +39,6 @@
           </div>
         </div>
 
-        <!-- Items del pedido -->
         <div *ngIf="expandedId() === order.id" class="border-t border-zinc-100 px-6 py-4">
           <div *ngFor="let item of order.order_items" class="flex items-center gap-4 py-2 border-b border-zinc-50 last:border-0">
             <img *ngIf="item.products?.image_url" [src]="item.products!.image_url" [alt]="item.products?.name"

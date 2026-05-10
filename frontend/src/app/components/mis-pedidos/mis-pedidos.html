@@ -1,1 +1,77 @@
-<p>mis-pedidos works!</p>
+<main class="min-h-screen bg-stone-50 px-6 py-12">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-4xl font-black tracking-tighter uppercase">Mis pedidos</h1>
+      <a routerLink="/catalogo"
+        class="text-xs font-bold uppercase tracking-widest hover:text-red-600 transition">
+        Seguir comprando →
+      </a>
+    </div>
+
+    <div *ngIf="loading()" class="text-center py-16 text-zinc-400">Cargando pedidos...</div>
+
+    <!-- Sin pedidos -->
+    <div *ngIf="!loading() && orders().length === 0" class="text-center py-24">
+      <div class="text-5xl mb-4">📦</div>
+      <h2 class="text-xl font-black uppercase tracking-widest mb-2">Aún no tienes pedidos</h2>
+      <p class="text-zinc-500 mb-8">Cuando realices tu primer pedido aparecerá aquí.</p>
+      <a routerLink="/catalogo"
+        class="bg-black text-white px-8 py-4 font-black uppercase tracking-widest text-xs hover:bg-red-600 transition-all">
+        Ver catálogo
+      </a>
+    </div>
+
+    <!-- Lista de pedidos -->
+    <div *ngIf="!loading() && orders().length > 0" class="flex flex-col gap-4">
+      <div *ngFor="let order of orders()"
+        class="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+
+        <!-- Cabecera -->
+        <div class="flex items-center justify-between px-6 py-4 cursor-pointer hover:bg-stone-50 transition"
+          (click)="toggleExpand(order.id)">
+          <div>
+            <span class="font-black text-sm tracking-widest">{{ shortId(order.id) }}</span>
+            <span class="text-zinc-400 text-xs ml-3">{{ formatDate(order.created_at) }}</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <span [class]="'px-3 py-1 rounded-full text-xs font-black ' + statusColors[order.status]">
+              {{ statusLabels[order.status] }}
+            </span>
+            <span class="font-black text-sm">{{ order.total_amount | number:'1.2-2' }} €</span>
+            <span class="text-zinc-400 text-xs">{{ expandedId() === order.id ? '▲' : '▼' }}</span>
+          </div>
+        </div>
+
+        <!-- Items expandibles -->
+        <div *ngIf="expandedId() === order.id" class="border-t border-zinc-100 px-6 py-4">
+          <div *ngFor="let item of order.order_items"
+            class="flex items-center gap-4 py-3 border-b border-zinc-50 last:border-0">
+            <img *ngIf="item.products?.image_url" [src]="item.products!.image_url" [alt]="item.products?.name"
+              class="w-12 h-12 object-contain bg-stone-100 rounded-xl">
+            <div *ngIf="!item.products?.image_url"
+              class="w-12 h-12 bg-stone-100 rounded-xl flex items-center justify-center text-2xl">👟</div>
+            <div class="flex-1">
+              <div class="font-bold text-sm">{{ item.products?.name }}</div>
+              <div class="text-xs text-zinc-400 mt-1">
+                Talla: {{ item.size || '-' }} · {{ item.quantity }} ud.
+              </div>
+            </div>
+            <div class="font-semibold text-sm">
+              {{ (item.unit_price * item.quantity) | number:'1.2-2' }} €
+            </div>
+          </div>
+
+          <div *ngIf="order.shipping_address" class="mt-3 text-xs text-zinc-500">
+            <span class="font-bold uppercase tracking-widest">Dirección de envío:</span>
+            {{ order.shipping_address }}
+          </div>
+          <div *ngIf="order.notes" class="mt-1 text-xs text-zinc-500">
+            <span class="font-bold uppercase tracking-widest">Notas:</span> {{ order.notes }}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
